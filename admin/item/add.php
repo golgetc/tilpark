@@ -1,5 +1,6 @@
 <?php include('../../tilpark.php'); ?>
 <?php include_content_page('add', false, 'item'); ?>
+
 <?php get_header(); ?>
 <?php
 add_page_info( 'title', 'Ürün Ekle' );
@@ -9,17 +10,19 @@ add_page_info( 'nav', array('name'=>'Ürün Ekle') );
 
 
 
+
 <?php
+
 if(isset($_POST['add'])) {
 
-	if($item_id = add_item($_POST)) {
+	if($account_id = add_item($_POST)) {
 		print_alert('add_item');
 
 		if(isset($_POST['again'])) {
 			unset($_POST);
 			$_POST['again'] = true;
 		} else {
-			header("Location: detail.php?id=".$item_id);
+			header("Location: detail.php?id=".$account_id);
 		}
 	} else {
 		if(is_alert()) { // eger form_validation hata var ise ekrana basarlim
@@ -30,13 +33,14 @@ if(isset($_POST['add'])) {
 }
 
 
-if(empty(@$_POST['code'])) {
-	$_POST['code'] = get_item_code_generator();
+if(@empty($_POST['code'])) {
+	$_POST['code'] = get_account_code_generator();
 }
 ?>
 
 
-<form name="form_add_accout" id="form_add_account" action="" method="POST" class="validate">
+
+<form name="form_add_item" id="form_add_item" action="" method="POST" class="validate">
 
 <div class="row">
 	<div class="col-md-6">
@@ -48,11 +52,19 @@ if(empty(@$_POST['code'])) {
 
 		<div class="form-group">
 			<label for="name">Ürün Adı <sup class="text-muted">ürün-hizmet-stok adı</sup></label>
-			<input type="text" name="name" id="name" value="<?php echo @$_POST['name']; ?>" class="form-control required focus" minlength="3" maxlength="50">
+			<input type="text" name="name" id="name" value="<?php echo @$_POST['name']; ?>" class="form-control required focus" minlength="2" maxlength="50">
 		</div> <!-- /.form-group -->
 
 		<div class="row">
+		    
+		    
 			<div class="col-md-2">
+
+				<div class="form-group">
+					<label for="quantity">Stok adedi</label>
+					<input type="tel" name="quantity" id="quantity" value="<?php echo @$_POST['quantity']; ?>" class="form-control" maxlength="3" >
+				</div> <!-- /.form-group -->
+
 				
 			</div> <!-- /.col-md-2 -->
 			<div class="col-xs-6 col-md-5">
@@ -82,8 +94,7 @@ if(empty(@$_POST['code'])) {
 					<label for="p_purc">Maliyet Fiyatı</label>
 					<input type="tel" name="p_purc" id="p_purc" value="<?php echo @$_POST['p_purc']; ?>" class="form-control money" maxlength="15" onkeyup="calc_vat();" onfocusout="calc_vat();">
 				</div> <!-- /.form-group -->
-			</div> <!-- /.col -->
-			<div class="col-xs-6 col-md-5">
+				<div class="col-xs-6 col-md-5">
 				<div class="form-group">
 					<label for="p_sale">Satış Fiyatı</label>
 					<input type="tel" name="p_sale" id="p_sale" value="<?php echo @$_POST['p_sale']; ?>" class="form-control money" maxlength="15" onkeyup="calc_vat();" onfocusout="calc_vat();" >
@@ -107,8 +118,7 @@ if(empty(@$_POST['code'])) {
 
 	</div> <!-- /.col-md-6 -->
 	<div class="col-md-6">
-
-		
+	    
 	</div> <!-- /.col-md-6 -->
 </div> <!-- /.row -->
 
@@ -143,6 +153,5 @@ function calc_vat() {
 	$('#p_sale_out_vat').val( p_sale_out_vat );
 }
 </script>
-
 
 <?php get_footer(); ?>
